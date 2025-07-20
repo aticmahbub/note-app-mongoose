@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express';
 import {Note} from '../models/notes.model';
 
 export const notesRouter = express.Router();
-notesRouter.get('', async (req: Request, res: Response) => {
+notesRouter.get('/', async (req: Request, res: Response) => {
     const notes = await Note.find();
     res.status(200).json(notes);
 });

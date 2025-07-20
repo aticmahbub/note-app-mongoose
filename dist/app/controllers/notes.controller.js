@@ -16,7 +16,7 @@ exports.notesRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const notes_model_1 = require("../models/notes.model");
 exports.notesRouter = express_1.default.Router();
-exports.notesRouter.get('', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.notesRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const notes = yield notes_model_1.Note.find();
     res.status(200).json(notes);
 }));
