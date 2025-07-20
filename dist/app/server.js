@@ -24,7 +24,6 @@ function main() {
             console.log('Connected to mongoose');
             server = app_1.default.listen(port, () => {
                 console.log(`App is listening on port ${port}`);
-                console.log(process.env.DB_USER);
             });
         }
         catch (error) {
