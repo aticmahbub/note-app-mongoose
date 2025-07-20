@@ -1,7 +1,17 @@
 import express, {Request, Response} from 'express';
 import {User} from '../models/user.model';
-import {IUser} from '../interfaces/user.interface';
+import z, {any, email} from 'zod';
+
 export const usersRouter = express.Router();
+
+const CreateUserSchemaZod = z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    age: z.number(),
+    email: z.string(),
+    password: z.string(),
+    role: z.string().optional(),
+});
 
 usersRouter.get('/', async (req: Request, res: Response) => {
     const users = await User.find();
@@ -13,13 +23,23 @@ usersRouter.get('/:id', async (req: Request, res: Response) => {
     res.status(200).json(user);
 });
 usersRouter.post('/create-user', async (req: Request, res: Response) => {
-    const user = req.body;
-    const createdUser = await User.create(user);
-    res.status(201).json({
-        success: true,
-        message: 'User created successfully',
-        userInfo: createdUser,
-    });
+    try {
+        const user = await CreateUserSchemaZod.parseAsync(req.body);
+        console.log(user, 'zod body');
+        const createdUser = await User.create(user);
+        res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            userInfo: {},
+        });
+    } catch (error: any) {
+        console.log(error);
+        res.status(400).json({
+            success: false,
+            message: error.message,
+            error,
+        });
+    }
 });
 usersRouter.patch('/update-user/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
