@@ -24,13 +24,14 @@ usersRouter.get('/:id', async (req: Request, res: Response) => {
 });
 usersRouter.post('/create-user', async (req: Request, res: Response) => {
     try {
-        const user = await CreateUserSchemaZod.parseAsync(req.body);
-        console.log(user, 'zod body');
-        const createdUser = await User.create(user);
+        const body = req.body;
+        // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
+        // console.log(zodBody, 'zod body');
+        const createdUser = await User.create(body);
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            userInfo: {},
+            userInfo: createdUser,
         });
     } catch (error: any) {
         console.log(error);

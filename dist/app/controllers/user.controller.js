@@ -36,13 +36,14 @@ exports.usersRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 exports.usersRouter.post('/create-user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield CreateUserSchemaZod.parseAsync(req.body);
-        console.log(user, 'zod body');
-        const createdUser = yield user_model_1.User.create(user);
+        const body = req.body;
+        // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
+        // console.log(zodBody, 'zod body');
+        const createdUser = yield user_model_1.User.create(body);
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            userInfo: {},
+            userInfo: createdUser,
         });
     }
     catch (error) {

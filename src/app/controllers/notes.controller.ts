@@ -3,7 +3,7 @@ import {Note} from '../models/notes.model';
 
 export const notesRouter = express.Router();
 notesRouter.get('/', async (req: Request, res: Response) => {
-    const notes = await Note.find();
+    const notes = await Note.find().populate('user');
     res.status(200).json(notes);
 });
 
@@ -13,19 +13,19 @@ notesRouter.get('/:id', async (req: Request, res: Response) => {
     res.status(200).json(note);
 });
 
-notesRouter.post('/create-note', async (req: Request, res: Response) => {
-    const myNote = new Note({
-        title: 'Learning Nextjs',
-    });
-    await myNote.save();
+// notesRouter.post('/create-note', async (req: Request, res: Response) => {
+//     const myNote = new Note({
+//         title: 'Learning Nextjs',
+//     });
+//     await myNote.save();
 
-    res.status(201).json({
-        success: true,
-        message: 'Note created successfully',
-        note: myNote,
-    });
-});
-notesRouter.post('/create-note-2', async (req: Request, res: Response) => {
+//     res.status(201).json({
+//         success: true,
+//         message: 'Note created successfully',
+//         note: myNote,
+//     });
+// });
+notesRouter.post('/create-note', async (req: Request, res: Response) => {
     const body = req.body;
     const note = await Note.create(body);
     res.status(201).json({

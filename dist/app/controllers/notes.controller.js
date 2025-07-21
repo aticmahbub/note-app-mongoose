@@ -17,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const notes_model_1 = require("../models/notes.model");
 exports.notesRouter = express_1.default.Router();
 exports.notesRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const notes = yield notes_model_1.Note.find();
+    const notes = yield notes_model_1.Note.find().populate('user');
     res.status(200).json(notes);
 }));
 exports.notesRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,18 +25,18 @@ exports.notesRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
     const note = yield notes_model_1.Note.findById(id);
     res.status(200).json(note);
 }));
+// notesRouter.post('/create-note', async (req: Request, res: Response) => {
+//     const myNote = new Note({
+//         title: 'Learning Nextjs',
+//     });
+//     await myNote.save();
+//     res.status(201).json({
+//         success: true,
+//         message: 'Note created successfully',
+//         note: myNote,
+//     });
+// });
 exports.notesRouter.post('/create-note', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const myNote = new notes_model_1.Note({
-        title: 'Learning Nextjs',
-    });
-    yield myNote.save();
-    res.status(201).json({
-        success: true,
-        message: 'Note created successfully',
-        note: myNote,
-    });
-}));
-exports.notesRouter.post('/create-note-2', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
     const note = yield notes_model_1.Note.create(body);
     res.status(201).json({

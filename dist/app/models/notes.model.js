@@ -15,5 +15,6 @@ const noteSchema = new mongoose_1.Schema({
         label: { type: String, required: true },
         color: { type: String, default: 'Grey' },
     },
+    user: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { versionKey: false, timestamps: true });
 exports.Note = (0, mongoose_1.model)('Note', noteSchema);

@@ -6,6 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
+const addressSchema = new mongoose_1.Schema({
+    city: { type: String },
+    street: { type: String },
+    zip: { type: Number },
+}, { _id: false });
 const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -54,5 +59,6 @@ const userSchema = new mongoose_1.Schema({
         },
         default: 'user',
     },
-});
+    address: { type: addressSchema },
+}, { versionKey: false, timestamps: true });
 exports.User = (0, mongoose_1.model)('User', userSchema);
