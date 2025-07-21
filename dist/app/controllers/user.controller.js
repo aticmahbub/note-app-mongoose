@@ -25,8 +25,20 @@ const CreateUserSchemaZod = zod_1.default.object({
     password: zod_1.default.string(),
     role: zod_1.default.string().optional(),
 });
+// usersRouter.get('/', async (req: Request, res: Response) => {
+//     const users = await User.find();
+//     res.status(200).json(users);
+// });
 exports.usersRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_model_1.User.find();
+    const userEmail = req.query.email ? req.query.email : '';
+    let users = [];
+    // if (userEmail) {
+    //     users = await User.find({email: userEmail});
+    // } else {
+    //     users = await User.find();
+    // }
+    users = yield user_model_1.User.find().sort({ email: 'asc' });
+    // const users = await User.find();
     res.status(200).json(users);
 }));
 exports.usersRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,7 +88,8 @@ exports.usersRouter.patch('/update-user/:id', (req, res) => __awaiter(void 0, vo
 }));
 exports.usersRouter.delete('/delete-user/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const deletedUser = yield user_model_1.User.findByIdAndDelete(id);
+    // const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = yield user_model_1.User.findOneAndDelete({ _id: id });
     res.status(100).json({
         success: true,
         message: 'User deleted successfully',

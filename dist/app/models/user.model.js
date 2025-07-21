@@ -16,6 +16,7 @@ exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const notes_model_1 = require("./notes.model");
 const addressSchema = new mongoose_1.Schema({
     city: { type: String },
     street: { type: String },
@@ -70,7 +71,12 @@ const userSchema = new mongoose_1.Schema({
         default: 'user',
     },
     address: { type: addressSchema },
-}, { versionKey: false, timestamps: true });
+}, {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
 userSchema.method('hashPassword', function (plainPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         const password = yield bcryptjs_1.default.hash(plainPassword, 10);
@@ -83,12 +89,29 @@ userSchema.static('hashPassword', function (plainPassword) {
         return password;
     });
 });
-userSchema.pre('save', function () {
+userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         this.password = yield bcryptjs_1.default.hash(this.password, 10);
+        next();
     });
 });
-userSchema.post('save', function (doc) {
+userSchema.post('save', function (doc, next) {
     console.log(`${doc.email} has been saved`);
+    next();
+});
+userSchema.post('findOneAndDelete', function (doc, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (doc) {
+            console.log(doc);
+            yield notes_model_1.Note.deleteMany({ user: doc._id });
+        }
+        next();
+    });
+});
+userSchema.pre('find', function (next) {
+    next();
+});
+userSchema.virtual('fullName').get(function () {
+    return `${this.firstName} ${this.lastName}`;
 });
 exports.User = (0, mongoose_1.model)('User', userSchema);

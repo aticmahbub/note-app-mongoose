@@ -13,8 +13,21 @@ const CreateUserSchemaZod = z.object({
     role: z.string().optional(),
 });
 
+// usersRouter.get('/', async (req: Request, res: Response) => {
+//     const users = await User.find();
+//     res.status(200).json(users);
+// });
 usersRouter.get('/', async (req: Request, res: Response) => {
-    const users = await User.find();
+    const userEmail = req.query.email ? req.query.email : '';
+    let users = [];
+    // if (userEmail) {
+    //     users = await User.find({email: userEmail});
+    // } else {
+    //     users = await User.find();
+    // }
+    users = await User.find().sort({email: 'asc'});
+
+    // const users = await User.find();
     res.status(200).json(users);
 });
 usersRouter.get('/:id', async (req: Request, res: Response) => {
@@ -66,7 +79,8 @@ usersRouter.patch('/update-user/:id', async (req: Request, res: Response) => {
 });
 usersRouter.delete('/delete-user/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const deletedUser = await User.findByIdAndDelete(id);
+    // const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = await User.findOneAndDelete({_id: id});
     res.status(100).json({
         success: true,
         message: 'User deleted successfully',
