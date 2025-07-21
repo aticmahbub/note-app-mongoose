@@ -46,8 +46,8 @@ exports.usersRouter.post('/create-user', (req, res) => __awaiter(void 0, void 0,
         // user.password = password;
         // await user.save();
         // built in and custom static methods
-        const password = yield user_model_1.User.hashPassword(body.password);
-        body.password = password;
+        // const password = await User.hashPassword(body.password);
+        // body.password = password;
         const user = yield user_model_1.User.create(body);
         res.status(201).json({
             success: true,

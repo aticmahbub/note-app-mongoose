@@ -83,4 +83,12 @@ userSchema.static('hashPassword', function (plainPassword) {
         return password;
     });
 });
+userSchema.pre('save', function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        this.password = yield bcryptjs_1.default.hash(this.password, 10);
+    });
+});
+userSchema.post('save', function (doc) {
+    console.log(`${doc.email} has been saved`);
+});
 exports.User = (0, mongoose_1.model)('User', userSchema);
