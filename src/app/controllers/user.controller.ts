@@ -25,13 +25,20 @@ usersRouter.get('/:id', async (req: Request, res: Response) => {
 usersRouter.post('/create-user', async (req: Request, res: Response) => {
     try {
         const body = req.body;
+        // const password = await bcrypt.hash(body.password, 10);
+        // body.password = password;
         // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
         // console.log(zodBody, 'zod body');
-        const createdUser = await User.create(body);
+        // const createdUser = await User.create(body);
+
+        const user = new User(body);
+        const password = await user.hashPassword(body.password);
+        user.password = password;
+        await user.save();
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            userInfo: createdUser,
+            userInfo: user,
         });
     } catch (error: any) {
         console.log(error);

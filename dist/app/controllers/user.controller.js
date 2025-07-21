@@ -37,13 +37,19 @@ exports.usersRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
 exports.usersRouter.post('/create-user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
+        // const password = await bcrypt.hash(body.password, 10);
+        // body.password = password;
         // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
         // console.log(zodBody, 'zod body');
-        const createdUser = yield user_model_1.User.create(body);
+        // const createdUser = await User.create(body);
+        const user = new user_model_1.User(body);
+        const password = yield user.hashPassword(body.password);
+        user.password = password;
+        yield user.save();
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            userInfo: createdUser,
+            userInfo: user,
         });
     }
     catch (error) {
