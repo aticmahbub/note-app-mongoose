@@ -74,8 +74,12 @@ const userSchema = new mongoose_1.Schema({
 userSchema.method('hashPassword', function (plainPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         const password = yield bcryptjs_1.default.hash(plainPassword, 10);
-        // this.password = password;
-        // this.save();
+        return password;
+    });
+});
+userSchema.static('hashPassword', function (plainPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const password = yield bcryptjs_1.default.hash(plainPassword, 10);
         return password;
     });
 });

@@ -27,14 +27,19 @@ usersRouter.post('/create-user', async (req: Request, res: Response) => {
         const body = req.body;
         // const password = await bcrypt.hash(body.password, 10);
         // body.password = password;
-        // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
-        // console.log(zodBody, 'zod body');
-        // const createdUser = await User.create(body);
 
-        const user = new User(body);
-        const password = await user.hashPassword(body.password);
-        user.password = password;
-        await user.save();
+        // const zodBody = await CreateUserSchemaZod.parseAsync(req.body);
+
+        // const createdUser = await User.create(body);
+        // const user = new User(body);
+        // const password = await user.hashPassword(body.password);
+        // user.password = password;
+        // await user.save();
+
+        // built in and custom static methods
+        const password = await User.hashPassword(body.password);
+        body.password = password;
+        const user = await User.create(body);
         res.status(201).json({
             success: true,
             message: 'User created successfully',
